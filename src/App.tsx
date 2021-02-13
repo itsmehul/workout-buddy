@@ -1,4 +1,4 @@
-import * as React from "react"
+import * as React from "react";
 import {
   ChakraProvider,
   Box,
@@ -8,11 +8,12 @@ import {
   Code,
   Grid,
   theme,
-} from "@chakra-ui/react"
-import { ColorModeSwitcher } from "./ColorModeSwitcher"
-import { Logo } from "./Logo"
+} from "@chakra-ui/react";
+import ColorModeSwitcher from "./ColorModeSwitcher";
+import Logo from "./Logo";
+import MotionBox from "./components/UI/MotionBox";
 
-export const App = () => (
+const App = (): JSX.Element => (
   <ChakraProvider theme={theme}>
     <Box textAlign="center" fontSize="xl">
       <Grid minH="100vh" p={3}>
@@ -32,7 +33,17 @@ export const App = () => (
             Learn Chakra
           </Link>
         </VStack>
+        <MotionBox
+          boxSize="40px"
+          bg="red.300"
+          drag="x"
+          dragConstraints={{ left: -100, right: 100 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        />
       </Grid>
     </Box>
   </ChakraProvider>
-)
+);
+
+export default App;

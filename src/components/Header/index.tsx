@@ -1,5 +1,6 @@
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
+  Avatar,
   Box,
   Button,
   Collapse,
@@ -12,25 +13,18 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
+import ColorModeSwitcher from "../../ColorModeSwitcher";
+import { useFirebase } from "../../context/Firebase";
 import DesktopNav from "./DesktopNav";
 import MobileNav from "./MobileNav";
 
 export default (): JSX.Element => {
   const { isOpen, onToggle } = useDisclosure();
+  const { isAuthenticated, signout, user } = useFirebase();
 
   return (
-    <Box>
-      <Flex
-        bg={useColorModeValue("white", "gray.800")}
-        color={useColorModeValue("gray.600", "white")}
-        minH="60px"
-        py={{ base: 2 }}
-        px={{ base: 4 }}
-        borderBottom={1}
-        borderStyle="solid"
-        borderColor={useColorModeValue("gray.200", "gray.900")}
-        align="center"
-      >
+    <Box mb="5">
+      <Flex minH="60px" py={{ base: 2 }} px={{ base: 4 }} align="center">
         <Flex
           flex={{ base: 1, md: "auto" }}
           ml={{ base: -2 }}
@@ -62,25 +56,35 @@ export default (): JSX.Element => {
         <Stack
           flex={{ base: 1, md: 0 }}
           justify="flex-end"
+          alignItems="center"
           direction="row"
           spacing={6}
         >
-          <Button as="a" fontSize="sm" fontWeight={400} variant="link" href="#">
-            Sign In
-          </Button>
-          <Button
-            display={{ base: "none", md: "inline-flex" }}
-            fontSize="sm"
-            fontWeight={600}
-            color="white"
-            bg="orange.400"
-            href="#"
-            _hover={{
-              bg: "orange.300",
-            }}
-          >
-            Sign Up
-          </Button>
+          <ColorModeSwitcher />
+          {isAuthenticated && (
+            <>
+              <Avatar
+                size="sm"
+                name={user?.displayName || "Dan Abrahmov"}
+                src={user?.photoURL || "https://bit.ly/dan-abramov"}
+              />
+              <Button
+                display={{ base: "none", md: "inline-flex" }}
+                fontSize="sm"
+                fontWeight={600}
+                color="white"
+                background="black"
+                href="#"
+                _hover={{
+                  bg: "gray.600",
+                }}
+                variant="outline"
+                onClick={signout}
+              >
+                Quit
+              </Button>
+            </>
+          )}
         </Stack>
       </Flex>
 

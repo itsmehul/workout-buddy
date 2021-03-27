@@ -13,4 +13,11 @@ export default extendTheme({
       borderColor: "orange.500",
     },
   },
+  components: {
+    Heading: {
+      baseStyle: (p) => ({
+        color: p.colorMode === "dark" ? "white" : "#393939",
+      }),
+    },
+  },
 });

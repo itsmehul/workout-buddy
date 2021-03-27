@@ -30,8 +30,11 @@ module.exports = {
     project: './tsconfig.json',
   },
   rules: {
+    "@typescript-eslint/no-namespace": "off",
     '@typescript-eslint/no-explicit-any': 'off',
+    "import/no-extraneous-dependencies": 'off',
     'react/jsx-props-no-spreading': 'off',
+    'react/prop-types': 0,
     'linebreak-style': 'off',
     'prettier/prettier': [
       'error',

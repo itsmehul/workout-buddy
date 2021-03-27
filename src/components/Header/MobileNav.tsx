@@ -18,48 +18,9 @@ export interface NavItem {
   href?: string;
 }
 
-export const NAV_ITEMS: Array<NavItem> = [
-  {
-    label: "Inspiration",
-    children: [
-      {
-        label: "Explore Design Work",
-        subLabel: "Trending Design to inspire you",
-        href: "#",
-      },
-      {
-        label: "New & Noteworthy",
-        subLabel: "Up-and-coming Designers",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "Find Work",
-    children: [
-      {
-        label: "Job Board",
-        subLabel: "Find your dream design job",
-        href: "#",
-      },
-      {
-        label: "Freelance Projects",
-        subLabel: "An exclusive list for contract work",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "Learn Design",
-    href: "#",
-  },
-  {
-    label: "Hire Designers",
-    href: "#",
-  },
-];
+export const NAV_ITEMS: Array<NavItem> = [];
 
-const MobileNavItem = ({ label, children, href }: NavItem) => {
+const MobileNavItem: React.FC<NavItem> = ({ label, children, href }) => {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
@@ -112,7 +73,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
   );
 };
 
-export default (): JSX.Element => {
+const Index: React.FC = () => {
   return (
     <Stack
       bg={useColorModeValue("white", "gray.800")}
@@ -125,3 +86,5 @@ export default (): JSX.Element => {
     </Stack>
   );
 };
+
+export default Index;

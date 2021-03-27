@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -21,47 +22,47 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: Array<NavItem> = [
-  {
-    label: "Inspiration",
-    children: [
-      {
-        label: "Explore Design Work",
-        subLabel: "Trending Design to inspire you",
-        href: "#",
-      },
-      {
-        label: "New & Noteworthy",
-        subLabel: "Up-and-coming Designers",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "Find Work",
-    children: [
-      {
-        label: "Job Board",
-        subLabel: "Find your dream design job",
-        href: "#",
-      },
-      {
-        label: "Freelance Projects",
-        subLabel: "An exclusive list for contract work",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "Learn Design",
-    href: "#",
-  },
-  {
-    label: "Hire Designers",
-    href: "#",
-  },
+  //   {
+  //     label: "Inspiration",
+  //     children: [
+  //       {
+  //         label: "Explore Design Work",
+  //         subLabel: "Trending Design to inspire you",
+  //         href: "#",
+  //       },
+  //       {
+  //         label: "New & Noteworthy",
+  //         subLabel: "Up-and-coming Designers",
+  //         href: "#",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     label: "Find Work",
+  //     children: [
+  //       {
+  //         label: "Job Board",
+  //         subLabel: "Find your dream design job",
+  //         href: "#",
+  //       },
+  //       {
+  //         label: "Freelance Projects",
+  //         subLabel: "An exclusive list for contract work",
+  //         href: "#",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     label: "Learn Design",
+  //     href: "#",
+  //   },
+  //   {
+  //     label: "Hire Designers",
+  //     href: "#",
+  //   },
 ];
 
-const DesktopSubNav = ({ label, href, subLabel }: NavItem): JSX.Element => {
+const DesktopSubNav: React.FC<NavItem> = ({ label, href, subLabel }) => {
   return (
     <Link
       href={href}
@@ -98,7 +99,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem): JSX.Element => {
   );
 };
 
-export default (): JSX.Element => {
+const Index: React.FC = () => {
   return (
     <Stack direction="row" spacing={4}>
       {NAV_ITEMS.map((navItem) => (
@@ -142,3 +143,5 @@ export default (): JSX.Element => {
     </Stack>
   );
 };
+
+export default Index;

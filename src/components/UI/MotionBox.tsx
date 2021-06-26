@@ -1,14 +1,10 @@
-import React from "react";
-import { Box, ChakraProps, forwardRef } from "@chakra-ui/react";
-import { motion, isValidMotionProp } from "framer-motion";
+import { Box } from "@chakra-ui/layout";
+import { HTMLChakraProps } from "@chakra-ui/system";
+import { HTMLMotionProps, motion } from "framer-motion";
 
-// 1. Create a custom motion component from Box
-export default motion.custom(
-  forwardRef((props: ChakraProps, ref: any) => {
-    const chakraProps = Object.fromEntries(
-      // do not pass framer props to DOM element
-      Object.entries(props).filter(([key]) => !isValidMotionProp(key))
-    );
-    return <Box ref={ref} {...chakraProps} />;
-  })
-);
+type Merge<P, T> = Omit<P, keyof T> & T;
+type MotionBoxProps = Merge<HTMLChakraProps<"div">, HTMLMotionProps<"div">>;
+
+const MotionBox: React.FC<MotionBoxProps> = motion(Box);
+
+export default MotionBox;

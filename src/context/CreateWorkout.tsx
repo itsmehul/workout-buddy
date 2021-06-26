@@ -1,30 +1,53 @@
 import React, { ContextType, createContext, useContext, useState } from "react";
 
+export const UserSetLevels = {
+  EASY: "EASY",
+  MEDIUM: "MEDIUM",
+  HARD: "HARD",
+  CHALLENGE: "CHALLENGE",
+};
+
 const initialState = {
   name: "",
-  weighted: true,
-  grind: "",
-  userSetLevel: "",
+  weighted: false,
+  userSetLevel: UserSetLevels.MEDIUM,
+  unit: "KG",
   weeks: {
     1: {
-      MON: [],
-      TUE: [],
-      WED: [],
-      THU: [],
-      FRI: [],
-      SAT: [],
-      SUN: [],
+      1: [
+        {
+          name: "Triangle Pushups",
+          type: ["CHEST", "CORE"],
+          videoUrl: "someUrl",
+          weights: true,
+        },
+      ],
     },
   },
 };
-declare namespace Types {
-  type Workout = {
+export enum ExerciseTypes {
+  CHEST = "CHEST",
+  CORE = "CORE",
+  LEGS = "LEGS",
+  GLUTES = "GLUTES",
+  ARMS = "ARMS",
+}
+export declare namespace CreateWorkoutTypes {
+  interface OverviewInput {
     name: string;
-    weighted: boolean;
-    grind: string;
     userSetLevel: string;
+    weighted?: boolean;
+    unit: string;
+  }
+  interface Overview {
+    name: string;
+    userSetLevel: string;
+    weighted?: boolean;
+    unit: string;
+  }
+  interface Workout extends Overview {
     weeks: Week;
-  };
+  }
 
   type Week = {
     [key: string]: Day;
@@ -34,32 +57,42 @@ declare namespace Types {
     [key: string]: Array<Exercise>;
   };
 
-  type Exercise = {
-    name: any;
+  interface Exercise {
+    name: string;
+    videoUrl: string;
+    type?: Array<ExerciseTypes | string>;
+    weights?: boolean;
     w?: any;
     t?: any;
-    r: any;
-    s: any;
-  };
+    r?: any;
+    d?: any;
+  }
 }
 
 interface WorkoutContextInterface {
-  workout: Types.Workout;
-  // setWorkout: Dispatch<SetStateAction<Types.Workout>>;
+  workout: CreateWorkoutTypes.Workout;
+  // setWorkout: Dispatch<SetStateAction<CreateWorkoutTypes.Workout>>;
   addWeek: () => void;
-  clearDay: (weekNumber: number, day: string) => void;
+  clearDay: (weekNumber: string, dayNumber: string) => void;
   addExercise: (
-    weekNumber: number,
-    day: string,
-    exercise: Types.Exercise
+    weekNumber: string,
+    dayNumber: string,
+    exercise: CreateWorkoutTypes.Exercise
+  ) => void;
+  updateExercise: (
+    weekNumber: string,
+    dayNumber: string,
+    index: number,
+    updatedExercise: CreateWorkoutTypes.Exercise
   ) => void;
   shiftPosition: (
-    weekNumber: number,
-    day: string,
-    exercise: Types.Exercise,
+    weekNumber: string,
+    dayNumber: string,
+    exercise: CreateWorkoutTypes.Exercise,
     index: number,
     direction: "UP" | "DOWN"
   ) => void;
+  addDescription: (description: CreateWorkoutTypes.OverviewInput) => void;
 }
 
 // Create Context Object
@@ -72,7 +105,9 @@ export const useCreateWorkout = (): ContextType<typeof CreateWorkoutContext> =>
 
 // Create a provider for components to consume and subscribe to changes
 export const CreateWorkoutContextProvider: React.FC = ({ children }) => {
-  const [workout, setWorkout] = useState<Types.Workout>(initialState);
+  const [workout, setWorkout] = useState<CreateWorkoutTypes.Workout>(
+    initialState
+  );
 
   const addWeek = () => {
     const lastWeekNumber = Number(Object.keys(workout.weeks).pop());
@@ -86,29 +121,40 @@ export const CreateWorkoutContextProvider: React.FC = ({ children }) => {
     });
   };
 
-  const clearDay = (weekNumber: number, day: string) => {
+  const clearDay = (weekNumber: string, dayNumber: string) => {
     const updatedWorkout = workout;
-    updatedWorkout.weeks[weekNumber][day] = [];
+    updatedWorkout.weeks[weekNumber][dayNumber] = [];
     setWorkout(updatedWorkout);
   };
 
   const addExercise = (
-    weekNumber: number,
-    day: string,
-    exercise: Types.Exercise
+    weekNumber: string,
+    dayNumber: string,
+    exercise: CreateWorkoutTypes.Exercise
   ) => {
     const updatedWorkout = workout;
-    updatedWorkout.weeks[weekNumber][day] = [
-      ...updatedWorkout.weeks[weekNumber][day],
+    updatedWorkout.weeks[weekNumber][dayNumber] = [
+      ...updatedWorkout.weeks[weekNumber][dayNumber],
       exercise,
     ];
-    setWorkout(updatedWorkout);
+    setWorkout({ ...updatedWorkout });
+  };
+
+  const updateExercise = (
+    weekNumber: string,
+    dayNumber: string,
+    index: number,
+    updatedExercise: CreateWorkoutTypes.Exercise
+  ) => {
+    const updatedWorkout = workout;
+    updatedWorkout.weeks[weekNumber][dayNumber][index] = updatedExercise;
+    setWorkout({ ...updatedWorkout });
   };
 
   const shiftPosition = (
-    weekNumber: number,
-    day: string,
-    exercise: Types.Exercise,
+    weekNumber: string,
+    dayNumber: string,
+    exercise: CreateWorkoutTypes.Exercise,
     index: number,
     direction: "UP" | "DOWN"
   ) => {
@@ -116,15 +162,22 @@ export const CreateWorkoutContextProvider: React.FC = ({ children }) => {
 
     const moveIndex = direction === "UP" ? -1 : 1;
 
-    if (!updatedWorkout.weeks[weekNumber][day][index + moveIndex]) {
+    if (!updatedWorkout.weeks[weekNumber][dayNumber][index + moveIndex]) {
       return;
     }
 
-    updatedWorkout.weeks[weekNumber][day][index] =
-      updatedWorkout.weeks[weekNumber][day][index + moveIndex];
-    updatedWorkout.weeks[weekNumber][day][index + moveIndex] = exercise;
+    updatedWorkout.weeks[weekNumber][dayNumber][index] =
+      updatedWorkout.weeks[weekNumber][dayNumber][index + moveIndex];
+    updatedWorkout.weeks[weekNumber][dayNumber][index + moveIndex] = exercise;
 
-    setWorkout(updatedWorkout);
+    setWorkout({ ...updatedWorkout });
+  };
+
+  const addDescription = (description: CreateWorkoutTypes.OverviewInput) => {
+    setWorkout((w) => ({
+      ...w,
+      ...description,
+    }));
   };
 
   return (
@@ -135,7 +188,9 @@ export const CreateWorkoutContextProvider: React.FC = ({ children }) => {
         addWeek,
         clearDay,
         addExercise,
+        updateExercise,
         shiftPosition,
+        addDescription,
       }}
     >
       {children}

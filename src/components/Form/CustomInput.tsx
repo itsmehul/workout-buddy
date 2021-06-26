@@ -7,16 +7,18 @@ interface CustomInputProps {
   name: string;
   errors: FieldErrors;
   register: any;
+  hideMessage?: boolean | undefined;
 }
 
 const CustomInput: React.FC<CustomInputProps & InputProps> = ({
   name,
   errors,
   register,
+  hideMessage,
   ...inputProps
 }) => {
   return (
-    <FormControl isInvalid={!!errors[name]}>
+    <FormControl isInvalid={errors && !!errors[name]}>
       <Input
         variant="filled"
         size="md"
@@ -24,9 +26,11 @@ const CustomInput: React.FC<CustomInputProps & InputProps> = ({
         name={name}
         ref={register}
       />
-      <FormErrorMessage>
-        {errors[name] && errors[name].message}
-      </FormErrorMessage>
+      {!hideMessage && (
+        <FormErrorMessage>
+          {errors[name] && errors[name].message}
+        </FormErrorMessage>
+      )}
     </FormControl>
   );
 };

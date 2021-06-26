@@ -42,5 +42,6 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
+    "react/no-unescaped-entities": 0,
   },
 };
